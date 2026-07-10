@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Detalle del personaje — Rick and Morty System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Rubik:wght@500;700;900&family=Rubik+Mono+One&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/app/css/styles.css" />
+  <link rel="icon" href="/favicon.ico" />
+  <script src="/app/js/theme.js"></script>
+</head>
+<body>
+  <header id="appHeader" class="app-header"></header>
+  <main class="container">
+    <a href="/app/characters.html" class="btn btn-ghost" style="margin-bottom:1rem;">← Volver</a>
+    <div id="content">
+      <div class="loading"><span class="spinner"></span> Cargando…</div>
+    </div>
+  </main>
+  <script src="/app/js/auth.js"></script>
+  <script src="/app/js/api.js"></script>
+  <script src="/app/js/nav.js"></script>
+  <script>
+    window.Auth.require();
+    const id = new URLSearchParams(location.search).get('id');
+    const root = document.getElementById('content');
+
+    function view(c, fromCache) {
+      root.innerHTML = `
+        ${fromCache ? '<div class="alert info">Datos desde caché (offline).</div>' : ''}
+        <h1 class="page-title">${c.name}</h1>
+        <p class="page-subtitle">Ficha del personaje #${c.id}</p>
+        <div class="detail-grid">
+          <div class="detail-card">
+            <img class="detail-img" src="${c.image}" alt="${c.name}" onerror="this.style.display='none'" />
+          </div>
+          <div class="detail-card">
+            <dl class="dl">
+              <dt>ID</dt><dd>${c.id}</dd>
+              <dt>Nombre</dt><dd>${c.name}</dd>
+              <dt>Estado</dt><dd><span class="badge ${c.status.toLowerCase()}">${c.status}</span></dd>
+              <dt>Especie</dt><dd>${c.species || '—'}</dd>
+              <dt>Tipo</dt><dd>${c.type || '—'}</dd>
+              <dt>Género</dt><dd>${c.gender || '—'}</dd>
+              <dt>Origen</dt><dd>${c.origin ? c.origin.name : '—'}</dd>
+              <dt>Ubicación</dt><dd>${c.location ? c.location.name : '—'}</dd>
+              <dt>Episodios</dt><dd>${(c.episode || []).length}</dd>
+            </dl>
+            <div class="detail-actions">
+              <button id="editBtn" class="btn btn-primary">Editar</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('editBtn').addEventListener('click', () => edit(c));
+    }
+
+    function edit(c) {
+      root.innerHTML = `
+        <h1 class="page-title">Editar personaje</h1>
+        <div class="detail-card" style="max-width:600px;">
+          <form id="editForm">
+            <div class="form-field"><label>Nombre</label><input id="f_name" value="${c.name || ''}" /></div>
+            <div class="form-field"><label>Especie</label><input id="f_species" value="${c.species || ''}" /></div>
+            <div class="form-field"><label>Género</label>
+              <select id="f_gender">
+                ${['Male','Female','Genderless','unknown'].map(g => `<option ${g===c.gender?'selected':''}>${g}</option>`).join('')}
+              </select>
+            </div>
+            <div class="form-field"><label>Tipo</label><input id="f_type" value="${c.type || ''}" /></div>
+            <div class="form-field"><label>Estado</label>
+              <select id="f_status">
+                ${['Alive','Dead','unknown'].map(s => `<option ${s===c.status?'selected':''}>${s}</option>`).join('')}
+              </select>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" id="cancelBtn" class="btn btn-ghost">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      `;
+      document.getElementById('cancelBtn').addEventListener('click', () => view(c, false));
+      document.getElementById('editForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const patch = {
+          name: document.getElementById('f_name').value.trim(),
+          species: document.getElementById('f_species').value.trim(),
+          gender: document.getElementById('f_gender').value,
+          type: document.getElementById('f_type').value.trim(),
+          status: document.getElementById('f_status').value,
+        };
+        window.API.saveOverride('character', c.id, patch);
+        view({ ...c, ...patch }, false);
+      });
+    }
+
+    (async () => {
+      if (!id) { root.innerHTML = '<div class="alert error">ID inválido</div>'; return; }
+      try {
+        const { data, fromCache } = await window.API.fetchOne('character', id);
+        view(data, fromCache);
+      } catch {
+        root.innerHTML = '<div class="alert error">No se pudo cargar el personaje.</div>';
+      }
+    })();
+  </script>
+</body>
+</html>

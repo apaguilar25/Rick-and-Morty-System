@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iniciar sesión — Rick and Morty System</title>
+  <meta name="description" content="Inicia sesión en Rick and Morty System" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Rubik:wght@500;700;900&family=Rubik+Mono+One&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/app/css/styles.css" />
+  <link rel="icon" href="/favicon.ico" />
+  <script src="/app/js/theme.js"></script>
+</head>
+<body>
+  <main class="auth-wrap">
+    <div class="auth-topbar">
+      <button id="themeBtn" class="btn btn-icon" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
+    </div>
+
+    <section class="auth-card" aria-labelledby="title">
+      <div class="auth-portal-deco" aria-hidden="true"></div>
+
+      <h1 id="title" class="auth-title">Rick &amp; Morty <span class="acento-oliva">System</span></h1>
+
+      <div id="alert" role="alert" aria-live="polite"></div>
+
+
+      <form id="loginForm" novalidate>
+        <div class="form-field">
+          <label for="identifier">🕹 Usuario o email</label>
+          <input id="identifier" name="identifier" type="text" required autocomplete="username" placeholder="rick" />
+        </div>
+        <div class="form-field">
+          <label for="password">🔑 Contraseña</label>
+          <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="••••••••" />
+          <div class="power-meter"><div id="powerFill" class="power-meter-fill"></div></div>
+          <div class="power-meter-label">
+            <span>Power</span>
+            <span class="lvl" id="powerLbl">Off</span>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">▶ Start</button>
+        </div>
+      </form>
+
+      <p class="form-alt" id="form-alt-start">¿NUEVO POR ACÁ? <a href="/app/register.html">Crear cuenta</a></p>
+      <p class="form-alt"><a href="/app/recover.html">¿Olvidaste la contraseña?</a></p>
+      <p class="form-hint">Demo · <code>rick</code> / <code>wubbalubba</code></p>
+    </section>
+    <p class="auth-footer">Desarrollado por Andrea Aguilar</p>
+
+  </main>
+
+  <script src="/app/js/auth.js"></script>
+  <script>
+    if (window.Auth.session()) location.href = '/app/characters.html';
+
+    const idEl = document.getElementById('identifier');
+    const pwEl = document.getElementById('password');
+    const powerFill = document.getElementById('powerFill');
+    const powerLbl = document.getElementById('powerLbl');
+
+    function update() {
+      const pct = Math.min(100, pwEl.value.length * 17);
+      powerFill.style.width = pct + '%';
+      const labels = ['Off', 'Low', 'Mid', 'High', 'Max', 'Ultra'];
+      powerLbl.textContent = labels[Math.min(labels.length - 1, Math.floor(pct / 20))];
+    }
+    pwEl.addEventListener('input', update);
+
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = idEl.value.trim();
+      const pw = pwEl.value;
+      const alertBox = document.getElementById('alert');
+      alertBox.innerHTML = '';
+      const res = window.Auth.login(id, pw);
+      if (res.ok) {
+        alertBox.innerHTML = `<div class="alert success">✔ Loading multiverse…</div>`;
+        setTimeout(() => location.href = '/app/characters.html', 500);
+      } else {
+        alertBox.innerHTML = `<div class="alert error">✘ ${res.error}</div>`;
+      }
+    });
+  </script>
+</body>
+</html>
+

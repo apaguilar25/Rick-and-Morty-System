@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recuperar contraseña — Rick and Morty System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Rubik:wght@500;700;900&family=Rubik+Mono+One&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/app/css/styles.css" />
+  <link rel="icon" href="/favicon.ico" />
+  <script src="/app/js/theme.js"></script>
+</head>
+<body>
+  <main class="auth-wrap">
+    <div class="auth-topbar">
+      <button id="themeBtn" class="btn btn-icon" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
+    </div>
+    <section class="auth-card">
+      <div class="auth-portal-deco" aria-hidden="true"></div>
+      <h1 class="auth-title">Rick &amp; Morty <span class="acento-oliva">System</span></h1>
+
+      <div id="alert" role="alert" aria-live="polite"></div>
+      <form id="recForm" novalidate>
+        <div class="form-field">
+          <label for="email">📡 Email</label>
+          <input id="email" type="email" required autocomplete="email" placeholder="rick@c137.com" />
+        </div>
+        <div class="form-field">
+          <label for="password">🔑 Nueva contraseña</label>
+          <input id="password" type="password" required minlength="6" autocomplete="new-password" />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">↻ Restablecer</button>
+        </div>
+      </form>
+      <p class="form-alt"><a href="/app/login.html">← Volver a inicio de sesión</a></p>
+    </section>
+    <p class="auth-footer">Desarrollado por Andrea Aguilar</p>
+
+  </main>
+
+  <script src="/app/js/auth.js"></script>
+  <script>
+    document.getElementById('recForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const pw = document.getElementById('password').value;
+      const alertBox = document.getElementById('alert');
+      alertBox.innerHTML = '';
+      const res = window.Auth.recover(email, pw);
+      if (!res.ok) return alertBox.innerHTML = `<div class="alert error">${res.error}</div>`;
+      alertBox.innerHTML = `<div class="alert success">Contraseña actualizada. Redirigiendo…</div>`;
+      setTimeout(() => location.href = '/app/login.html', 1200);
+    });
+  </script>
+</body>
+</html>

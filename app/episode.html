@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Detalle del episodio — Rick and Morty System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Rubik:wght@500;700;900&family=Rubik+Mono+One&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/app/css/styles.css" />
+  <link rel="icon" href="/favicon.ico" />
+  <script src="/app/js/theme.js"></script>
+</head>
+<body>
+  <header id="appHeader" class="app-header"></header>
+  <main class="container">
+    <a href="/app/episodes.html" class="btn btn-ghost" style="margin-bottom:1rem;">← Volver</a>
+    <div id="content"><div class="loading"><span class="spinner"></span> Cargando…</div></div>
+  </main>
+  <script src="/app/js/auth.js"></script>
+  <script src="/app/js/api.js"></script>
+  <script src="/app/js/nav.js"></script>
+  <script>
+    window.Auth.require();
+    const id = new URLSearchParams(location.search).get('id');
+    const root = document.getElementById('content');
+
+    function view(e, fromCache) {
+      root.innerHTML = `
+        ${fromCache ? '<div class="alert info">Datos desde caché (offline).</div>' : ''}
+        <h1 class="page-title">${e.name}</h1>
+        <p class="page-subtitle">Ficha técnica del episodio ${e.episode}</p>
+        <div class="detail-card" style="max-width:720px;">
+          <dl class="dl">
+            <dt>ID</dt><dd>${e.id}</dd>
+            <dt>Nombre</dt><dd>${e.name}</dd>
+            <dt>Fecha de emisión</dt><dd>${e.air_date || '—'}</dd>
+            <dt>Código</dt><dd>${e.episode || '—'}</dd>
+            <dt>Personajes</dt><dd>${(e.characters || []).length}</dd>
+            <dt>Creado</dt><dd>${e.created ? new Date(e.created).toLocaleDateString() : '—'}</dd>
+          </dl>
+          <div class="detail-actions">
+            <button id="editBtn" class="btn btn-primary">Editar</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('editBtn').addEventListener('click', () => edit(e));
+    }
+
+    function edit(e) {
+      root.innerHTML = `
+        <h1 class="page-title">Editar episodio</h1>
+        <div class="detail-card" style="max-width:600px;">
+          <form id="editForm">
+            <div class="form-field"><label>Nombre</label><input id="f_name" value="${e.name || ''}" /></div>
+            <div class="form-field"><label>Fecha de emisión</label><input id="f_air" value="${e.air_date || ''}" /></div>
+            <div class="form-field"><label>Código</label><input id="f_code" value="${e.episode || ''}" /></div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" id="cancelBtn" class="btn btn-ghost">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      `;
+      document.getElementById('cancelBtn').addEventListener('click', () => view(e, false));
+      document.getElementById('editForm').addEventListener('submit', (ev) => {
+        ev.preventDefault();
+        const patch = {
+          name: document.getElementById('f_name').value.trim(),
+          air_date: document.getElementById('f_air').value.trim(),
+          episode: document.getElementById('f_code').value.trim(),
+        };
+        window.API.saveOverride('episode', e.id, patch);
+        view({ ...e, ...patch }, false);
+      });
+    }
+
+    (async () => {
+      if (!id) { root.innerHTML = '<div class="alert error">ID inválido</div>'; return; }
+      try {
+        const { data, fromCache } = await window.API.fetchOne('episode', id);
+        view(data, fromCache);
+      } catch {
+        root.innerHTML = '<div class="alert error">No se pudo cargar el episodio.</div>';
+      }
+    })();
+  </script>
+</body>
+</html>

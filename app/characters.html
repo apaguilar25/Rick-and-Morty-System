@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Personajes — Rick and Morty System</title>
+  <meta name="description" content="Explora todos los personajes de Rick and Morty" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Rubik:wght@500;700;900&family=Rubik+Mono+One&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/app/css/styles.css" />
+  <link rel="icon" href="/favicon.ico" />
+  <script src="/app/js/theme.js"></script>
+</head>
+<body>
+  <header id="appHeader" class="app-header"></header>
+  <main class="container">
+    <span class="badge-chip">🎯 Character Select</span><h1 class="page-title">Personajes</h1>
+    <p class="page-subtitle">Consulta, busca y ordena los personajes del multiverso.</p>
+
+    <div class="toolbar">
+      <input id="search" class="search" type="search" placeholder="Buscar por nombre…" aria-label="Buscar personaje por nombre" />
+    </div>
+
+    <div id="loading" class="loading"><span class="spinner"></span> Cargando personajes…</div>
+    <div id="tableWrap" class="table-wrap" style="display:none;">
+      <div class="table-scroll">
+        <table>
+          <thead id="thead"></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="pagination" class="pagination"></div>
+    <div id="error"></div>
+  </main>
+
+  <script src="/app/js/auth.js"></script>
+  <script src="/app/js/api.js"></script>
+  <script src="/app/js/nav.js"></script>
+  <script src="/app/js/table.js"></script>
+  <script>
+    window.Auth.require();
+    (async () => {
+      try {
+        const { results, fromCache } = await window.API.fetchAll('character');
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('tableWrap').style.display = 'block';
+        if (fromCache) {
+          document.getElementById('error').innerHTML =
+            `<div class="alert info" style="margin-top:1rem;">Mostrando datos desde caché (modo offline).</div>`;
+        }
+        window.TableView({
+          data: results,
+          columns: [
+            { key: 'id', label: 'ID' },
+            { key: 'name', label: 'Nombre' },
+            { key: 'species', label: 'Especie' },
+            { key: 'gender', label: 'Género' },
+            { key: 'type', label: 'Tipo', render: r => r.type || '—' },
+            { key: 'status', label: 'Estado', render: r => `<span class="badge ${r.status.toLowerCase()}">${r.status}</span>` },
+          ],
+          searchField: 'name',
+          pageSize: 20,
+          tbodyEl: document.getElementById('tbody'),
+          theadEl: document.getElementById('thead'),
+          searchEl: document.getElementById('search'),
+          paginationEl: document.getElementById('pagination'),
+          onRowClick: (id) => location.href = `/app/character.html?id=${id}`
+        });
+      } catch (e) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error').innerHTML =
+          `<div class="alert error">No se pudieron cargar los personajes. Verifica tu conexión.</div>`;
+      }
+    })();
+  </script>
+</body>
+</html>
