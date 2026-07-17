@@ -44,17 +44,35 @@
   }
 
   async function fetchAll(kind) {
-    // Descarga todas las páginas y aplica overrides
-    let url = `${BASE}/${kind}?page=1`;
+    // Descarga página 1 para saber el total, luego el resto en paralelo.
+    // Si alguna página falla, seguimos con las que sí cargaron.
     let results = [];
     let anyCache = false;
-    while (url) {
-      const { data, fromCache } = await fetchWithCache(url);
-      if (fromCache) anyCache = true;
-      results = results.concat(data.results || []);
-      url = data.info && data.info.next;
-      if (fromCache && !data.info) break;
+    let firstPage;
+    try {
+      firstPage = await fetchWithCache(`${BASE}/${kind}?page=1`);
+    } catch (e) {
+      throw e; // sin página 1 no hay nada
     }
+    if (firstPage.fromCache) anyCache = true;
+    results = results.concat(firstPage.data.results || []);
+    const totalPages = (firstPage.data.info && firstPage.data.info.pages) || 1;
+
+    const pageNums = [];
+    for (let p = 2; p <= totalPages; p++) pageNums.push(p);
+
+    const settled = await Promise.allSettled(
+      pageNums.map(p => fetchWithCache(`${BASE}/${kind}?page=${p}`))
+    );
+    settled.forEach(s => {
+      if (s.status === 'fulfilled') {
+        if (s.value.fromCache) anyCache = true;
+        results = results.concat(s.value.data.results || []);
+      } else {
+        anyCache = true; // marcamos que hubo datos incompletos/parciales
+      }
+    });
+
     results = results.map(r => applyOverride(kind, r));
     return { results, fromCache: anyCache };
   }
