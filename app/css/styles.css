@@ -380,12 +380,20 @@ tbody tr:last-child td { border-bottom: none; }
    PAGINACIÓN
    ============================================================ */
 .pagination {
-  display: flex; gap: 0.6rem; justify-content: center; align-items: center;
-  margin-top: 1.5rem; flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.6rem;
+  align-items: center;
+  justify-items: center;
+  margin-top: 1.5rem;
 }
+.pagination .btn { white-space: nowrap; }
+.pagination .btn[data-act="prev"] { justify-self: start; }
+.pagination .btn[data-act="next"] { justify-self: end; }
 .pagination .page-info {
   color: var(--text-muted); font-family: "Rubik Mono One", monospace;
-  font-size: 0.85rem;
+  font-size: 0.85rem; text-align: center;
+  min-width: 0; padding: 0 0.25rem;
 }
 
 /* ============================================================
@@ -417,7 +425,17 @@ tbody tr:last-child td { border-bottom: none; }
   text-shadow: var(--glow-olive);
   opacity: 0.9;
 }
-
+[data-theme="light"] .auth-footer { 
+  margin-top: 29px;
+  text-align: center;
+  font-family: "Bagel Fat One", sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--magenta-deep);
+  text-shadow: var(--glow-magenta);
+  opacity: 0.9;
+}
 
 
 .auth-card {
@@ -425,7 +443,7 @@ tbody tr:last-child td { border-bottom: none; }
   background: var(--surface);
   border: 3px solid var(--magenta);
   border-radius: var(--radius-lg);
-  padding: 4.25rem 2rem 2rem;
+  padding: 4rem 2rem 0.4rem 2rem;
   box-shadow: var(--shadow-chunky-magenta);
   animation: aparecer 0.5s ease-out;
   position: relative;
@@ -532,6 +550,15 @@ tbody tr:last-child td { border-bottom: none; }
   font-size: 0.78rem; color: var(--text-muted);
   text-transform: uppercase; letter-spacing: 0.1em;
 }
+.form-alt-olv {
+  margin-top: 0.5rem; text-align: center;
+  font-family: "Rubik", sans-serif; font-weight: 700;
+  font-size: 0.78rem; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.form-alt-olv a { color: var(--magenta); text-shadow: var(--glow-magenta); text-decoration: none; }
+.form-alt-olv a:hover { color: var(--olive); text-shadow: var(--glow-olive); text-decoration: none; }
+
 .form-alt a { color: var(--magenta); text-shadow: var(--glow-magenta); text-decoration: none; }
 .form-alt a:hover { color: var(--olive); text-shadow: var(--glow-olive); text-decoration: none; }
 #form-alt-start { margin-top: 1.6rem; }
@@ -658,11 +685,26 @@ tbody tr:last-child td { border-bottom: none; }
    RESPONSIVE
    ============================================================ */
 @media (max-width: 860px) {
-  .nav { flex-wrap: wrap; gap: 0.6rem; padding: 0.7rem 1rem; }
-  .brand { font-size: 1.3rem; }
+  .nav {
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 0.7rem 1rem;
+    justify-content: space-between;
+  }
+  .brand { font-size: 1.3rem; margin-right: auto; }
   .portal { width: 46px; height: 46px; }
-  .nav-links { order: 3; margin-left: 0; width: 100%; justify-content: center; }
-  .nav-actions { margin-left: auto; }
+  .nav-links {
+    order: 3;
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+    flex: 0 0 100%;
+  }
+  .nav-actions {
+    margin-left: 0;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+  }
   .user-chip { font-size: 0.7rem; }
 
   .auth-card { max-width: 420px; padding: 4rem 1.65rem 1.75rem; }
@@ -689,7 +731,16 @@ tbody tr:last-child td { border-bottom: none; }
 
   th, td { padding: 0.7rem 0.75rem; font-size: 0.85rem; }
   .pagination { gap: 0.4rem; }
-  .pagination .btn { padding: 0.55rem 0.8rem; font-size: 0.72rem; }
+  .pagination .btn { padding: 0.5rem 0.7rem; font-size: 0.7rem; }
+  .pagination .page-info { font-size: 0.7rem; letter-spacing: 0.02em; }
+
+  /* Header más compacto: oculta el saludo, deja brand + acciones a los lados */
+  .user-chip { display: none; }
+  .nav-actions .btn { padding: 0.5rem 0.75rem; font-size: 0.72rem; }
+
+
+
+
 
   .auth-wrap { padding: 70px 1rem 1.25rem; justify-content: flex-start; }
   .auth-card {
@@ -714,7 +765,14 @@ tbody tr:last-child td { border-bottom: none; }
 }
 
 @media (max-width: 400px) {
-  .brand span:not(.acento-oliva) { display: none; }
+  .nav { padding: 0.55rem 0.7rem; gap: 0.45rem; }
+  .portal { display: none; }
+  .brand { font-size: 0.95rem; gap: 0; margin-right: 0.4rem; min-width: 0; flex: 1 1 auto; }
+  .brand span:not(.acento-oliva) { display: inline; white-space: nowrap; margin-right: 0.5rem; }
   .nav-links a { padding: 0.35rem 0.55rem; font-size: 0.65rem; }
+  .nav-actions { gap: 0.35rem; flex-shrink: 0; }
+  .nav-actions .btn { padding: 0.45rem 0.6rem; font-size: 0.68rem; }
+  .nav-actions .btn-icon { width: 34px; height: 34px; }
   .auth-card { padding: 3.5rem 1rem 1.25rem; }
 }
+

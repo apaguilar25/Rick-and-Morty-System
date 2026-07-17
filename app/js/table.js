@@ -51,7 +51,7 @@
       if (state.page > pages) state.page = pages;
       opts.paginationEl.innerHTML = `
         <button class="btn btn-ghost" ${state.page === 1 ? 'disabled' : ''} data-act="prev">← Anterior</button>
-        <span class="page-info">Página ${state.page} de ${pages} · ${total} resultados</span>
+        <span class="page-info">Página ${state.page} de ${pages}</span>
         <button class="btn btn-ghost" ${state.page === pages ? 'disabled' : ''} data-act="next">Siguiente →</button>
       `;
       opts.paginationEl.querySelectorAll('button').forEach(b => {
