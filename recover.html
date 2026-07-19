@@ -37,7 +37,6 @@
       <p class="form-alt"><a href="login.html">← Volver a inicio de sesión</a></p>
     </section>
     <p class="auth-footer">Desarrollado por Andrea Aguilar</p>
-
   </main>
 
   <script src="js/auth.js"></script>
@@ -51,7 +50,7 @@
       const res = window.Auth.recover(email, pw);
       if (!res.ok) return alertBox.innerHTML = `<div class="alert error">${res.error}</div>`;
       alertBox.innerHTML = `<div class="alert success">Contraseña actualizada. Redirigiendo…</div>`;
-      setTimeout(() => location.href = '/login.html', 1200);
+      setTimeout(() => location.href = 'login.html', 1200);
     });
   </script>
 </body>

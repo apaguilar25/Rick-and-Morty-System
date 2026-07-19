@@ -12,14 +12,14 @@
     header.innerHTML = `
       <div id="offlineBanner" class="offline-banner" style="display:none;">Sin conexión — mostrando datos en caché</div>
       <nav class="nav" aria-label="Principal">
-        <a class="brand" href="/characters.html">
+        <a class="brand" href="characters.html">
           <span class="portal" aria-hidden="true"></span>
           <span>Rick &amp; Morty <span class="acento-oliva">System</span></span>
         </a>
 
         <div class="nav-links">
-          ${link('/characters.html', 'Personajes')}
-          ${link('/episodes.html', 'Episodios')}
+          ${link('characters.html', 'Personajes')}
+          ${link('episodes.html', 'Episodios')}
         </div>
         <div class="nav-actions">
           ${session ? `<span class="user-chip">Hola, <strong>${session.username}</strong></span>` : ''}
@@ -28,7 +28,6 @@
         </div>
       </nav>
     `;
-    // #themeBtn se maneja por delegación en theme.js; solo refrescamos el ícono.
     if (window.Theme && window.Theme.refreshButton) window.Theme.refreshButton();
     const lo = document.getElementById('logoutBtn');
     if (lo) lo.addEventListener('click', () => window.Auth.logout());

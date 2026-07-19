@@ -9,7 +9,6 @@
   }
   function saveUsers(u) { localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
 
-  // Seed demo user una sola vez
   if (!localStorage.getItem(USERS_KEY)) {
     saveUsers([{ username: 'rick', email: 'rick@c137.com', password: 'wubbalubba' }]);
   }
