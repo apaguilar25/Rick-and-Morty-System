@@ -7,19 +7,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Rubik:wght@500;700;900&family=Rubik+Mono+One&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/app/css/styles.css" />
+  <link rel="stylesheet" href="/css/styles.css" />
   <link rel="icon" href="/favicon.ico" />
-  <script src="/app/js/theme.js"></script>
+  <script src="/js/theme.js"></script>
 </head>
 <body>
   <header id="appHeader" class="app-header"></header>
   <main class="container">
-    <a href="/app/episodes.html" class="btn btn-ghost" style="margin-bottom:1rem;">← Volver</a>
+    <a href="/episodes.html" class="btn btn-ghost" style="margin-bottom:1rem;">← Volver</a>
     <div id="content"><div class="loading"><span class="spinner"></span> Cargando…</div></div>
   </main>
-  <script src="/app/js/auth.js"></script>
-  <script src="/app/js/api.js"></script>
-  <script src="/app/js/nav.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/nav.js"></script>
   <script>
     window.Auth.require();
     const id = new URLSearchParams(location.search).get('id');

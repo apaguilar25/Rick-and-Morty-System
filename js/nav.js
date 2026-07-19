@@ -12,14 +12,14 @@
     header.innerHTML = `
       <div id="offlineBanner" class="offline-banner" style="display:none;">Sin conexión — mostrando datos en caché</div>
       <nav class="nav" aria-label="Principal">
-        <a class="brand" href="/app/characters.html">
+        <a class="brand" href="/characters.html">
           <span class="portal" aria-hidden="true"></span>
           <span>Rick &amp; Morty <span class="acento-oliva">System</span></span>
         </a>
 
         <div class="nav-links">
-          ${link('/app/characters.html', 'Personajes')}
-          ${link('/app/episodes.html', 'Episodios')}
+          ${link('/characters.html', 'Personajes')}
+          ${link('/episodes.html', 'Episodios')}
         </div>
         <div class="nav-actions">
           ${session ? `<span class="user-chip">Hola, <strong>${session.username}</strong></span>` : ''}

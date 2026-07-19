@@ -39,13 +39,13 @@
       saveUsers(users);
       return { ok: true };
     },
-    logout() { localStorage.removeItem(SESSION_KEY); location.href = '/app/login.html'; },
+    logout() { localStorage.removeItem(SESSION_KEY); location.href = '/login.html'; },
     session() {
       try { return JSON.parse(localStorage.getItem(SESSION_KEY)); }
       catch { return null; }
     },
     require() {
-      if (!Auth.session()) location.href = '/app/login.html';
+      if (!Auth.session()) location.href = '/login.html';
     }
   };
 
