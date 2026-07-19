@@ -8,9 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Rubik:wght@500;700;900&family=Rubik+Mono+One&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css" />
-  <link rel="icon" href="/favicon.ico" />
-  <script src="/js/theme.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="favicon.ico" />
+  <script src="js/theme.js"></script>
 </head>
 <body>
   <main class="auth-wrap">
@@ -45,17 +45,17 @@
         </div>
       </form>
 
-      <p class="form-alt" id="form-alt-start">¿NUEVO POR ACÁ? <a href="/register.html">Crear cuenta</a></p>
-      <p class="form-alt-olv"><a href="/recover.html">¿Olvidaste la contraseña?</a></p>
+      <p class="form-alt" id="form-alt-start">¿NUEVO POR ACÁ? <a href="register.html">Crear cuenta</a></p>
+      <p class="form-alt-olv"><a href="recover.html">¿Olvidaste la contraseña?</a></p>
       <p class="form-hint">Demo · <code>rick</code> / <code>wubbalubba</code></p>
     </section>
     <p class="auth-footer">Desarrollado por Andrea Aguilar</p>
 
   </main>
 
-  <script src="/js/auth.js"></script>
+  <script src="js/auth.js"></script>
   <script>
-    if (window.Auth.session()) location.href = '/characters.html';
+    if (window.Auth.session()) location.href = 'characters.html';
 
     const idEl = document.getElementById('identifier');
     const pwEl = document.getElementById('password');
@@ -79,7 +79,7 @@
       const res = window.Auth.login(id, pw);
       if (res.ok) {
         alertBox.innerHTML = `<div class="alert success">✔ Loading multiverse…</div>`;
-        setTimeout(() => location.href = '/characters.html', 500);
+        setTimeout(() => location.href = 'characters.html', 500);
       } else {
         alertBox.innerHTML = `<div class="alert error">✘ ${res.error}</div>`;
       }
