@@ -216,7 +216,7 @@ h1, h2, h3, .display {
 
 .portal {
   width: 56px; height: 56px; border-radius: 50%;
-  background: url('img/portal.png') center/cover no-repeat, var(--olive);
+  background: url('/img/portal.png') center/cover no-repeat, var(--olive);
   box-shadow: 0 0 14px var(--magenta), 0 0 24px rgba(196, 215, 104, 0.5);
   animation: portal-spin 6s linear infinite;
   flex-shrink: 0;
